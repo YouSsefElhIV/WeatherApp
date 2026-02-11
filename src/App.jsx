@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import wind from "./assets/images/wind.png"
+import humidity from "./assets/images/humidity.png"
 
 function autoComplete (word, setCities)
 {
@@ -119,11 +121,11 @@ function App() {
             {datee}
           </div>
           <div className='add-data2'>
-            <img src="src/assets/images/humidity.png" alt="humidity" className='humidity-img'/>
+            <img src={humidity} alt="humidity" className='humidity-img'/>
             {data?.main?.humidity}
           </div>
           <div className='add-data3'>
-            <img src="src/assets/images/wind.png" alt="wind-speed" className='wind-speed-img'/>
+            <img src={wind} alt="wind-speed" className='wind-speed-img'/>
             {data?.wind?.speed}
           </div>
         </div>
