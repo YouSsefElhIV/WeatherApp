@@ -110,7 +110,7 @@ function App() {
           {data.name}
         </div>
         <div className='icon'>
-          <img src={`src/assets/images/${data.weather[0].icon}.png`} alt="weather icon" className='icon-image' />
+          <img src={`/images/${data.weather[0].icon}.png`} alt="weather icon" className='icon-image' />
           {data.weather[0].description}
         </div>
         <div className='temp'>
