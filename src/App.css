@@ -101,7 +101,7 @@ body{
   margin: 25px;
   display: flex;
   align-items: top;
-  gap: 2px;
+  gap: 10px;
 }
 
 .ok{
