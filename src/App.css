@@ -150,8 +150,9 @@ body {
 }
 
 .search-button:hover {
-  opacity: 0.6;
-  transform: translateY(-3px);
+  /* opacity: 0.6; */
+  /* transform: translateY(-3px); */
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .humidity-img,
