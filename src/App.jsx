@@ -4,6 +4,7 @@ import wind from "./assets/images/wind.png";
 import humidity from "./assets/images/humidity.png";
 import search from "./assets/images/search.png";
 import { citiesData } from "./assets/data/cities.js";
+import { motion } from "motion/react";
 
 function autoComplete(word, setCities) {
   let res = [];
@@ -75,7 +76,18 @@ function App() {
   return (
     <>
       {data && data.weather ? (
-        <div className="Card">
+        <motion.div
+          initial={{ y: "100%", x: "0%", opacity: 0 }}
+          animate={{
+            y: 0,
+            x: 0,
+            opacity: 1,
+            transition: {
+              duration: 1,
+            },
+          }}
+          className="Card"
+        >
           <div className="search-div">
             <div className="ok">
               <input
@@ -105,20 +117,35 @@ function App() {
               <img className="search-icon" src={search} alt="weather-search" />
             </button>
           </div>
-          <div className="cityName">{data.name}</div>
-          <div className="icon">
-            <img
-              src={`/images/${data.weather[0].icon}.png`}
-              alt="weather icon"
-              className="icon-image"
-            />
-            <div style={{ fontWeight: "450" }}>
-              {" "}
-              {data.weather[0].description}{" "}
+          <motion.div
+            key={data.name}
+            initial={{ opacity: 0, y: "0%", x: "9%" }}
+            animate={{ opacity: 1, y: 0, x: 0, transition: { duration: 0.5 } }}
+            style={{
+              "border-top": "1px solid rgb(155, 155, 155)",
+              "padding-top": "20px",
+            }}
+          >
+            <div className="cityName">{data.name}</div>
+            <div className="icon">
+              <img
+                src={`/images/${data.weather[0].icon}.png`}
+                alt="weather icon"
+                className="icon-image"
+              />
+              <div style={{ fontWeight: "450" }}>
+                {" "}
+                {data.weather[0].description}{" "}
+              </div>
             </div>
-          </div>
-          <div className="temp">{Math.floor(data.main?.temp)} &#8451;</div>
-          <div className="add-data">
+            <div className="temp">{Math.floor(data.main?.temp)} &#8451;</div>
+          </motion.div>
+          <motion.div
+            key={data.name + "1"}
+            initial={{ y: "0%", x: "-9%" }}
+            animate={{ y: 0, x: 0, transition: { duration: 0.5 } }}
+            className="add-data"
+          >
             <div className="add-data1">{datee}</div>
             <div className="add-data2">
               <img src={humidity} alt="humidity" className="humidity-img" />
@@ -128,8 +155,8 @@ function App() {
               <img src={wind} alt="wind-speed" className="wind-speed-img" />
               {data?.wind?.speed}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       ) : (
         <div className="Card">
           <div className="search-div">
@@ -142,9 +169,7 @@ function App() {
                 disabled
               />
             </div>
-            <button
-              className="search-button"
-            >
+            <button className="search-button">
               <img className="search-icon" src={search} alt="weather-search" />
             </button>
           </div>
