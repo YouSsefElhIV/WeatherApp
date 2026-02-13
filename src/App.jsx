@@ -3,65 +3,81 @@ import "./App.css";
 import wind from "./assets/images/wind.png";
 import humidity from "./assets/images/humidity.png";
 import search from "./assets/images/search.png";
-import { citiesData } from "./assets/data/cities.js";
 import { motion } from "motion/react";
 
-function autoComplete(word, setCities) {
-  let res = [];
-  res = citiesData.filter((w) => {
-    return w.toLowerCase().includes(word.toLowerCase());
+async function fetchData(city, setData) {
+  const apiKey = import.meta.env.VITE_API_KEY;
+  const url = import.meta.env.VITE_URL;
+  try {
+    const response = await fetch(`${url}${city}&appid=${apiKey}&units=metric`);
+    if (!response.ok) {
+      const response = await fetch(
+        `${url}Casablanca&appid=${apiKey}&units=metric`,
+      );
+      const results = await response.json();
+      setData(results);
+    } else {
+      const results = await response.json();
+      setData(results);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function getData(city, setData) {
+  fetchData(city, setData);
+}
+
+function autoComplete(word, citiesData, setCities) {
+  let res = citiesData.filter((w) => {
+    return w.city.toLowerCase().includes(word.toLowerCase());
   });
   setCities(res);
 }
 
-function displaySuggList(cities, setCity, setHide) {
-  return cities.map((res) => {
+function displaySuggList(cities, setCity, setHide, setData) {
+  const ci = [...new Set(cities.map((e) => e.city))];
+  return ci.slice(0, 50).map((res, index) => {
     return (
       <li
-        key={res}
-        data-value={res}
+        key={index}
         onClick={(e) => {
-          setCity(e.currentTarget.dataset.value);
+          setCity(res);
           setHide(true);
+          getData(res, setData);
         }}
       >
-        {" "}
-        {res}{" "}
+        {res}
       </li>
     );
   });
 }
 
 function App() {
-  const apiKey = import.meta.env.VITE_API_KEY;
-  const url = import.meta.env.VITE_URL;
   const [data, setData] = useState([]);
-  const [city, setCity] = useState("Casablanca");
+  const [city, setCity] = useState(["Casablanca"]);
   const [datee, setDatee] = useState(0);
   const [cities, setCities] = useState([]);
   const [hide, setHide] = useState(true);
+  const [citiesData, setCitiesData] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        `${url}${city}&appid=${apiKey}&units=metric`,
-      );
-      if (!response.ok) {
-        const response = await fetch(
-          `${url}Casablanca&appid=${apiKey}&units=metric`,
-        );
-        const results = await response.json();
-        setData(results);
-      } else {
-        const results = await response.json();
-        setData(results);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
   useEffect(() => {
-    fetchData();
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(
+          `https://raw.githubusercontent.com/yassine-khadiri/world-cities/refs/heads/main/world-cities.json`,
+        );
+        const c = await response.json();
+        setCitiesData(c);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCities();
+  }, []);
+  useEffect(() => {
+    fetchData(city, setData);
     const timezone = data.timezone;
     const now = new Date();
     const utc = now.getTime() + now.getTimezoneOffset() * 60000;
@@ -69,9 +85,6 @@ function App() {
 
     setDatee(localTime.toLocaleTimeString());
   }, [data.timezone]);
-  function getData() {
-    fetchData();
-  }
 
   return (
     <>
@@ -98,19 +111,19 @@ function App() {
                 onChange={(e) => {
                   setCity(e.currentTarget.value);
                   setHide(false);
-                  autoComplete(e.currentTarget.value, setCities);
+                  autoComplete(e.currentTarget.value, citiesData, setCities);
                 }}
               />
               <div className="sugg">
                 {hide === false &&
-                  cities.length !== 177 &&
-                  displaySuggList(cities, setCity, setHide)}
+                  city &&
+                  displaySuggList(cities, setCity, setHide, setData)}
               </div>
             </div>
             <button
               className="search-button"
               onClick={() => {
-                getData();
+                getData(city, setData);
                 setHide(true);
               }}
             >
@@ -122,8 +135,8 @@ function App() {
             initial={{ opacity: 0, y: "0%", x: "9%" }}
             animate={{ opacity: 1, y: 0, x: 0, transition: { duration: 0.5 } }}
             style={{
-              "border-top": "1px solid rgb(155, 155, 155)",
-              "padding-top": "20px",
+              borderTop: "1px solid rgb(155, 155, 155)",
+              paddingTop: "20px",
             }}
           >
             <div className="cityName">{data.name}</div>
