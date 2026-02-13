@@ -16,7 +16,6 @@ body {
 
 .Card {
   font-size: 20px;
-  height: 30vh;
   width: 50vw;
   border-radius: 20px;
   display: flex;
@@ -74,7 +73,7 @@ body {
   margin: 10px;
   display: flex;
   gap: 2%;
-  align-items: center;
+  padding-top: 20px;
   justify-content: start;
   flex: 1;
   font-size: clamp(1px, 5.5vw, 20px);
@@ -88,7 +87,6 @@ body {
   align-items: center;
   justify-content: space-evenly;
   border-radius: 10px;
-  height: 50%;
   width: 50%;
   backdrop-filter: blur(5px);
   font-size: clamp(13px, 3vh, 15px);
@@ -115,7 +113,7 @@ body {
   gap: 10px;
   margin-right: 10px;
   border-bottom: 1px solid rgb(155, 155, 155);
-  padding-bottom: 8px;
+  padding-bottom: 20px;
 }
 
 .ok {
