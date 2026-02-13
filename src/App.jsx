@@ -37,18 +37,17 @@ function autoComplete(word, citiesData, setCities) {
 }
 
 function displaySuggList(cities, setCity, setHide, setData) {
-  const ci = [...new Set(cities.map((e) => e.city))];
-  return ci.slice(0, 50).map((res, index) => {
+  return cities.slice(0, 50).map((res, index) => {
     return (
       <li
         key={index}
-        onClick={(e) => {
-          setCity(res);
+        onClick={() => {
+          setCity(res.city);
           setHide(true);
-          getData(res, setData);
+          getData(res.city, setData);
         }}
       >
-        {res}
+        {res.city}, {res.country}
       </li>
     );
   });
