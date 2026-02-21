@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import wind from "./assets/images/wind.png";
 import humidity from "./assets/images/humidity.png";
@@ -75,6 +75,47 @@ function App() {
     };
     fetchCities();
   }, []);
+
+  useEffect(() => {
+    let image = "none";
+    if (data &&data.weather)
+    {
+      if (data?.weather[0]?.icon === "01d")
+        image = "dayclear.jpg";
+      else if (data?.weather[0]?.icon === "02d" || data?.weather[0]?.icon === "03d")
+          image = "daypartcloudy.jpg"
+      else if (data?.weather[0]?.icon === "04d")
+          image = "daycloudy.jpg"
+      else if (data?.weather[0]?.icon === "09d" || data?.weather[0]?.icon === "10d")
+          image = "daycloudy.jpg"
+      else if (data?.weather[0]?.icon === "11d")
+        image = "daythunder.jpg"
+      else if (data?.weather[0]?.icon === "13d")
+        image = "daysnow.jpg"
+      else if (data?.weather[0]?.icon === "50d")
+        image = "daymist.jpg"
+      else if (data?.weather[0]?.icon === "01n")
+        image = "nightclear.jpg";
+      else if (data?.weather[0]?.icon === "02n" || data?.weather[0]?.icon === "03n")
+          image = "nightpartcloudy.jpg"
+      else if (data?.weather[0]?.icon === "04n")
+          image = "nightcloudy.jpg"
+      else if (data?.weather[0]?.icon === "09n" || data?.weather[0]?.icon === "10n")
+          image = "nightcloudy.jpg"
+      else if (data?.weather[0]?.icon === "11n")
+        image = "nightthunder.jpg"
+      else if (data?.weather[0]?.icon === "13n")
+        image = "nightsnow.jpg"
+      else if (data?.weather[0]?.icon === "50n")
+        image = "nightmist.jpg"
+    }
+      if (image === "none")
+        image = `background.jpg`
+      document.body.style.background = `url(/images/${image}) no-repeat center`
+      document.body.style.backgroundSize = "cover"
+
+  }, [data.weather])
+
   useEffect(() => {
     fetchData(city, setData);
     const timezone = data.timezone;
